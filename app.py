@@ -4,7 +4,7 @@ from google.oauth2.service_account import Credentials
 # 1. 구글 시트 연결
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 creds = Credentials.from_service_account_file(
-    'D:/Coding Study/Chatbot/credentials.json',  # 자신의 경로로 변경
+    'credentials.json', 
     scopes=SCOPES
 )
 gc = gspread.authorize(creds)
