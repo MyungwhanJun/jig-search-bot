@@ -57,8 +57,8 @@ def handle_kakao_request():
         })
 
     # ✅ 헤더 및 추출할 열 번호 정의
-    headers = ['PJT', 'FRT/RR', '회전측', '아답터', '고정측_CAL', '고정측_DB', '고정측_RTV']
-    cols_to_check = [2, 4, 5, 6, 7, 8, 9]
+    headers = ['PJT', 'Front/Rear ', '회전측_로터', '아답터_코너', '고정측_CAL ', '고정측_DB  ', '고정측_RTV ', 'BCM_Fixture']
+    cols_to_check = [2, 4, 5, 6, 7, 8, 9, 10]
 
     # ✅ 결과 데이터 추출
     table_data = [headers]
@@ -76,17 +76,18 @@ def handle_kakao_request():
     # ✅ 각 열의 최대 너비 계산 (표 정렬용)
     col_widths = [max(len(str(r[i])) for r in table_data) for i in range(len(headers))]
 
-    def to_kakao_format(headers, table_data, col_widths):
-        output = "📋 관련 지그 정보\n\n"
-        header_line = " ".join(f"[{headers[i].ljust(col_widths[i])}]" for i in range(len(headers)))
-        output += header_line + "\n"
-        for r in table_data[1:]:
-            row_line = " ".join(f"{r[i].ljust(col_widths[i])}" for i in range(len(headers)))
-            output += row_line + "\n"
-        output += "\n🤖 찾고 싶은 지그의 차종을 입력해주세요!"
+    def to_kakao_format_grouped(headers, table_data):
+        output = ""
+        for row in table_data[1:]:
+            output += f"📋 {row[0]} 관련 지그 정보\n"
+            for i in range(1, len(headers)):
+                output += f"{headers[i]}: {row[i]}\n"
+            output += "\n"
+        output += "🤖 다른 지그의 차종을 입력해주세요!"
         return output
 
-    message = to_kakao_format(headers, table_data, col_widths)
+    message = to_kakao_format_grouped(headers, table_data)
+
 
     return jsonify({
         "version": "2.0",
